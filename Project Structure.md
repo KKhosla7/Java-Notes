@@ -1,7 +1,7 @@
 # Project Structure
 
 This is the default Project Structure I like to follow for my Spring Projects. Any inputs/suggestions are always welcome.
-Email me: Karan underscore Khosla at outlook dot com
+Email me: karan underscore khosla at outlook dot com
 
 ```
 com

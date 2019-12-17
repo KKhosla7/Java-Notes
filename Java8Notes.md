@@ -218,3 +218,63 @@ people.forEach(System.out::println);
 people.removeIf(person -> person.getAge() < 20);
 ```
 
+## List Interface
+
+* On List
+
+```
+// On List
+boolean replaceAll(UnaryOperator<? super E> operator);
+```
+
+```
+// On List
+boolean sort(Comparator<? super E> comparator);
+```
+
+* Example:
+
+```
+List<String> names = ... ;
+names.replaceAll(name -> name.toUpperCase());
+names.replaceAll(String::toUpperCase);
+```
+
+```
+List<Person> people = ... ;
+names.sort(
+	Comparator.comparing(Person::getName)
+			  .thenComparing(Person::getAge)
+);
+```
+
+## Map Interface
+
+```
+// On Map
+void forEach(BiConsumer<? super K, ? super V> consumer);
+```
+* Example:
+
+```
+Map<City, List<Person>> map = ... ;
+map.forEach(
+	(city, list) ->
+	System.out.println(city + " : " + list.size() + " people")
+);
+```
+
+* A newer version of the get() method
+
+```
+// On Map
+V getOrDefault(Object key, V defaultValue);
+```
+
+* Allows one to check if a key is present in a map or not
+
+```
+Map<City, List<Person>> map = ... ;
+
+System.out.println(map.getOrDefault(boston, emptyList()));
+```

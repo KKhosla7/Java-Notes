@@ -278,3 +278,142 @@ Map<City, List<Person>> map = ... ;
 
 System.out.println(map.getOrDefault(boston, emptyList()));
 ```
+
+* New version of the put() method
+
+```
+// On Map
+V putIfAbsent(K key, V value);
+```
+
+* Example:
+
+```
+Map<City, List<Person>> map = ... ;
+map.putIfAbsent(boston, new ArrayList<>()); // returns the previous value
+```
+
+```
+Map<City, List<Person>> map = ... ;
+map.putIfAbsent(boston, new ArrayList<>());
+map.get(boston).add(maria);
+```
+* New replace() method
+
+```
+// On Map
+V replace(K key, V newValue);
+boolean replace(K key, V existingValue, V newValue);
+```
+
+```
+// On Map
+void replaceAll(BiFunction<? super K, ? super V, ? extends V> function);
+```
+
+* New remove() method:
+
+```
+// On Map
+void remove(Object key, Object value);
+```
+
+* A new family of methods:compute*()
+
+```
+// On Map
+V compute(
+	K key, BiFunction<? super K, ? super V, ? extends V> remapping);
+```
+
+* Computes a new value from:
+	* the key passed as a parameter, that may not be in the map
+	* the value that may be associated with that key, or null
+	* the lambda that will compute the remapping
+
+* The computeIfAbsent() version
+
+```
+// On Map
+V computeIfAbsent(
+	K key, Function<? super K, ? extends V> mapping);
+```
+
+* Computes a new value from:
+	* the key passed as a parameter, that should not be in the map
+	* the lambda to compute the mapping from the key
+
+* The computeIfPresent() version
+
+```
+// On Map
+V computeIfPresent(
+	K key, BiFunction<? super K, ? super V, ? extends V> remapping);
+```
+
+* Computes a new value from:
+	* the key passed as a parameter, that should be in the map
+	* the existing value, cannot be null
+	* the lambda to compute the remapping from the key and the existing value
+
+* All the compute*() methods return the value
+	* that has just been computed
+	* or that was in the map before
+* Useful to build maps of maps (for instance)
+
+```
+Map<String, Map<String, Person>> map = ... ;
+
+// key, newValue
+map.computeIfAbsent(
+	"one",
+	key -> new HashMap<String, Person>()
+).put("two", john);
+```
+
+* All the compute*() methods return the value
+	* that has just been computed
+	* or that was in the map before
+* Or to build maps of List (for instance)
+
+```
+Map<String, List<Person>> map = ... ;
+
+// key, newValue
+map.computeIfAbsent(
+	"one",
+	key -> new ArrayList<Person>()
+).add(john);
+```
+
+* The last one is the merge() method, to merge maps
+
+```
+// On Map
+V merge(
+	K key, V newValue,
+	BiFunction<? super V, ? super V, ? extends V> remapping);
+```
+
+* If the passed key is not in the map: adds the key/value pair to the map
+* If the passed key is in the map
+	* merge the existing value with the passed value using the lambda expression
+	* note that the remapping takes a pair of values and return a new value
+
+* Let us see an example:merge the key/values from map2 into map1
+
+```
+Map<City, List<Person>> map1 = new HashMap<>();
+Map<City, List<Person>> map2 = new HashMap<>();
+
+map2.forEach(
+	(key, value) ->
+		map1.merge(
+			key, value,
+			(existingPeople, newPeople) -> {
+				existingPeople.addAll(newPeople);
+				return exisingPeople;
+			}
+		)
+);
+```
